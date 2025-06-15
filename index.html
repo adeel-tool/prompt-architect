@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The Ultimate AI Prompt Helper to build advanced prompts for Text, Image, and Video AIs like Gemini, GPT, Midjourney, and Sora. Create, reorder, and copy prompts easily.">
+    <meta name="keywords" content="AI prompt generator, prompt helper, prompt engineering, Midjourney prompts, ChatGPT prompts, AI tool">
+    <title>Ultimate AI Prompt Helper</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><a href="index.html">Prompt Architect</a></div>
+            <nav class="nav-links">
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-wrapper">
+        <div class="tool-wrapper">
+            <h1 style="font-size: 2.5em; text-align: center; color: var(--heading-color);">Ultimate AI Prompt Helper</h1>
+            <div class="top-controls">
+                <div class="mode-selector">
+                    <button id="btn-text" onclick="switchMode('text')">For Text AI</button>
+                    <button id="btn-image" onclick="switchMode('image')">For Image AI</button>
+                    <button id="btn-video" onclick="switchMode('video')">For Video AI</button>
+                </div>
+            </div>
+            <div class="main-container">
+                <div class="prompt-builder">
+                    <h2 id="builder-title">Image Prompt Builder</h2>
+                    <p id="builder-description">Create a detailed prompt for AI Image generators like Midjourney, Stable Diffusion, DALL-E, etc.</p>
+                    <div class="builder-controls" id="builder-controls"></div>
+                    <hr style="border-color: var(--primary-color); margin: 20px 0;">
+                    <div id="dynamic-form-container"></div>
+                </div>
+                <div class="prompt-preview">
+                    <h2>Live Prompt Preview</h2>
+                    <pre id="final-prompt"></pre>
+                    <button id="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+                </div>
+            </div>
+        </div>
+        <div class="content-wrapper">
+            <h2>About This Tool</h2>
+            <h3>What is a Prompt Helper?</h3>
+            <p>A prompt helper is a tool designed to assist you in writing high-quality, detailed, and effective prompts for various Artificial Intelligence (AI) models. Instead of facing a blank canvas, a prompt helper gives you a structured framework to build your ideas, ensuring you provide the AI with enough information to generate the best possible results. This process is often called "prompt engineering."</p>
+            <h3>How to Use This Tool (Step-by-Step)</h3>
+            <ol>
+                <li><strong>Select the AI Type:</strong> At the top, choose whether you want to create a prompt for a Text, Image, or Video AI.</li>
+                <li><strong>Add Prompt Components:</strong> Click the "Add..." buttons to insert different building blocks for your prompt, like 'Subject', 'Style', or 'Task'.</li>
+                <li><strong>Fill in the Details:</strong> Write your ideas in the input boxes of the cards that appear. Use the examples as a guide.</li>
+                <li><strong>Reorder and Refine:</strong> Use the '✥' icon to drag and drop the cards to change the order of your prompt components.</li>
+                <li><strong>Copy Your Prompt:</strong> Once you are satisfied with the live preview, click the "Copy Prompt" button and paste it into your favorite AI tool!</li>
+            </ol>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+             <a href="about.html">About</a> | <a href="contact.html">Contact</a> | <a href="privacy.html">Privacy</a>
+        </div>
+        <p>&copy; 2025 Prompt Architect. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const builderConfig = {
+            text: {
+                title: 'Text Prompt Builder',
+                description: 'Construct a detailed prompt for Text AIs like Gemini, GPT, etc.',
+                components: ['Role / Persona', 'Task', 'Format', 'Context'],
+                examples: {
+                    'Role / Persona': 'e.g., A professional copywriter',
+                    'Task': 'e.g., Write 5 catchy headlines for a new coffee brand',
+                    'Format': 'e.g., Provide the answer in a numbered list',
+                    'Context': 'e.g., The brand is eco-friendly and targets young adults'
+                },
+                outputFormatter: (parts) => {
+                    return parts.map(part => part.value.trim()).join('. ') + '.';
+                }
+            },
+            image: {
+                title: 'Image Prompt Builder',
+                description: 'Create a detailed prompt for AI Image generators like Midjourney, Stable Diffusion, DALL-E, etc.',
+                components: ['Subject', 'Action', 'Place', 'Style', 'Lighting', 'Camera'],
+                examples: {
+                    'Subject': 'e.g., An astronaut riding a horse',
+                    'Action': 'e.g., exploring a mysterious alien planet',
+                    'Place': 'e.g., in a bioluminescent forest',
+                    'Style': 'e.g., digital painting, cinematic, hyperdetailed, epic',
+                    'Lighting': 'e.g., soft volumetric light, rim lighting',
+                    'Camera': 'e.g., wide-angle shot, low-angle view, 8k'
+                },
+                outputFormatter: (parts) => {
+                    return parts.map(part => part.value).join(', ');
+                }
+            },
+            video: {
+                title: 'Video Prompt Builder',
+                description: 'Create a prompt for AI Video generators like Sora, Runway, etc.',
+                components: ['Scene', 'Action / Movement', 'Style / Mood', 'Sound'],
+                examples: {
+                    'Scene': 'e.g., A rainy night in a cyberpunk city, neon lights',
+                    'Action / Movement': 'e.g., A sleek cybernetic cat walks silently, the camera follows it at a low angle',
+                    'Style / Mood': 'e.g., Cinematic, Blade Runner style, mysterious, 8k',
+                    'Sound': 'e.g., soft rain, distant synth music'
+                },
+                outputFormatter: (parts) => {
+                    return 'Video of: ' + parts.map(part => part.value).join('. ');
+                }
+            }
+        };
+
+        let currentMode = '';
+        const formContainer = document.getElementById('dynamic-form-container');
+        const finalPromptElement = document.getElementById('final-prompt');
+        const controlsContainer = document.getElementById('builder-controls');
+        const builderTitle = document.getElementById('builder-title');
+        const builderDescription = document.getElementById('builder-description');
+
+        function switchMode(mode) {
+            if (currentMode === mode) return;
+            currentMode = mode;
+
+            document.querySelectorAll('.mode-selector button').forEach(btn => {
+                btn.classList.toggle('active', btn.id === `btn-${mode}`);
+            });
+
+            controlsContainer.innerHTML = '';
+            formContainer.innerHTML = '';
+
+            const config = builderConfig[mode];
+
+            builderTitle.textContent = config.title;
+            builderDescription.textContent = config.description;
+
+            config.components.forEach(componentName => {
+                const btn = document.createElement('button');
+                btn.textContent = `Add ${componentName}`;
+                btn.onclick = () => addComponent(componentName);
+                controlsContainer.appendChild(btn);
+            });
+            
+            addComponent(config.components[0]);
+            if(config.components.length > 1) addComponent(config.components[1]);
+
+            updatePrompt();
+        }
+
+        function addComponent(type) {
+            const card = document.createElement('div');
+            card.className = 'input-card';
+            card.dataset.type = type;
+
+            const header = document.createElement('div');
+            header.className = 'card-header';
+            
+            const dragHandle = document.createElement('span');
+            dragHandle.className = 'drag-handle';
+            dragHandle.textContent = '✥';
+
+            const label = document.createElement('label');
+            label.textContent = type;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '&#128465;';
+            removeBtn.title = 'Remove';
+            removeBtn.onclick = () => { card.remove(); updatePrompt(); };
+
+            header.appendChild(dragHandle);
+            header.appendChild(label);
+            header.appendChild(removeBtn);
+
+            const inputElement = (type === 'Task' || type.includes('Action')) ? document.createElement('textarea') : document.createElement('input');
+            inputElement.placeholder = builderConfig[currentMode].examples[type] || `Describe the ${type}...`;
+            inputElement.addEventListener('input', updatePrompt);
+            if(inputElement.tagName === 'TEXTAREA') inputElement.rows = 2;
+
+            card.appendChild(header);
+            card.appendChild(inputElement);
+            formContainer.appendChild(card);
+            updatePrompt();
+        }
+
+        function updatePrompt() {
+            const cards = formContainer.querySelectorAll('.input-card');
+            let promptParts = [];
+            cards.forEach(card => {
+                const input = card.querySelector('input, textarea');
+                if (input.value.trim() !== '') {
+                    promptParts.push({
+                        type: card.dataset.type,
+                        value: input.value.trim()
+                    });
+                }
+            });
+            
+            finalPromptElement.textContent = builderConfig[currentMode].outputFormatter(promptParts);
+        }
+        
+        function copyPrompt() {
+            const textToCopy = finalPromptElement.textContent;
+            const copyBtn = document.getElementById('copy-btn');
+            if (textToCopy) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => { copyBtn.textContent = 'Copy Prompt'; }, 2000);
+                });
+            }
+        }
+
+        new Sortable(formContainer, {
+            handle: '.drag-handle',
+            animation: 150,
+            onEnd: () => updatePrompt(),
+        });
+
+        // Initialize with a default mode
+        switchMode('image');
+    </script>
+</body>
+</html>
